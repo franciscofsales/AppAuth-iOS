@@ -109,12 +109,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)resumeExternalUserAgentFlowWithURL:(NSURL *)URL {
   // rejects URLs that don't match redirect (these may be completely unrelated to the authorization)
-  if (![self shouldHandleURL:URL]) {
-    return NO;
-  }
-  
+  // if (![self shouldHandleURL:URL]) {
+  //   return NO;
+  // }
+
   AppAuthRequestTrace(@"Authorization Response: %@", URL);
-  
+
   // checks for an invalid state
   if (!_pendingauthorizationFlowCallback) {
     [NSException raise:OIDOAuthExceptionInvalidAuthorizationFlow
@@ -137,7 +137,7 @@ NS_ASSUME_NONNULL_BEGIN
   if (!error) {
     response = [[OIDAuthorizationResponse alloc] initWithRequest:_request
                                                       parameters:query.dictionaryValue];
-      
+
     // verifies that the state in the response matches the state in the request, or both are nil
     if (!OIDIsEqualIncludingNil(_request.state, response.state)) {
       NSMutableDictionary *userInfo = [query.dictionaryValue mutableCopy];
@@ -281,9 +281,9 @@ NS_ASSUME_NONNULL_BEGIN
     presentAuthorizationRequest:(OIDAuthorizationRequest *)request
               externalUserAgent:(id<OIDExternalUserAgent>)externalUserAgent
                        callback:(OIDAuthorizationCallback)callback {
-  
+
   AppAuthRequestTrace(@"Authorization Request: %@", request);
-  
+
   OIDAuthorizationFlowSessionImplementation *flowSession =
       [[OIDAuthorizationFlowSessionImplementation alloc] initWithRequest:request];
   [flowSession presentAuthorizationWithExternalUserAgent:externalUserAgent callback:callback];
@@ -305,7 +305,7 @@ NS_ASSUME_NONNULL_BEGIN
                          callback:(OIDTokenCallback)callback {
 
   NSURLRequest *URLRequest = [request URLRequest];
-  
+
   AppAuthRequestTrace(@"Token Request: %@\nHeaders:%@\nHTTPBody: %@",
                       URLRequest.URL,
                       URLRequest.allHTTPHeaderFields,
@@ -430,7 +430,7 @@ NS_ASSUME_NONNULL_BEGIN
         });
         return;
       }
-      
+
       // OpenID Connect Core Section 3.1.3.7. rule #1
       // Not supported: AppAuth does not support JWT encryption.
 
@@ -461,7 +461,7 @@ NS_ASSUME_NONNULL_BEGIN
         });
         return;
       }
-      
+
       // OpenID Connect Core Section 3.1.3.7. rules #4 & #5
       // Not supported.
 
@@ -487,7 +487,7 @@ NS_ASSUME_NONNULL_BEGIN
         });
         return;
       }
-      
+
       // OpenID Connect Core Section 3.1.3.7. rule #10
       // Validates that the issued at time is not more than +/- 10 minutes on the current time.
       NSTimeInterval issuedAtDifference = [idToken.issuedAt timeIntervalSinceNow];
@@ -519,7 +519,7 @@ NS_ASSUME_NONNULL_BEGIN
           return;
         }
       }
-      
+
       // OpenID Connect Core Section 3.1.3.7. rules #12
       // ACR is not directly supported by AppAuth.
 
